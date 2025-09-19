@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To-Do-List</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+    /* Full screen */
+    .moving-bg {
+      width: 100%;
+      height: 100%;
+      background-color: #400202; /* dark base */
+      background-image:
+        radial-gradient(circle at top left, #1e3a8a, transparent 50%),
+        radial-gradient(circle at top right, #07002b, transparent 50%),
+        radial-gradient(circle at bottom left, #780202, transparent 50%),
+        radial-gradient(circle at bottom right, #182432, transparent 50%);
+      background-blend-mode: screen;
+      background-size: 200% 200%;
+      animation: moveColors 10s linear infinite, pulseLights 6s ease-in-out infinite;
+    }
+
+    @keyframes moveColors {
+      0% { background-position: 0% 0%; }
+      50% { background-position: 100% 100%; }
+      100% { background-position: 0% 0%; }
+    }
+
+    @keyframes pulseLights {
+      0%, 100% { background-size: 200% 200%; }
+      50% { background-size: 220% 220%; }
+    }
+  </style>
+</head>
+<body class="moving-bg min-h-screen flex items-center justify-center p-6">
+
+  <!-- Container for both cards -->
+  <div class="flex flex-col md:flex-row justify-center gap-6 w-full max-w-6xl">
+
+    <!-- Left Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 flex-1">
+      <div class="flex justify-between items-center">
+          <h2 class="text-2xl font-bold mb-4">Friday, <span class="text-sm font-semibold">Week 38</span></h2>
+     
+           <button class="px-4 py-1 bg-gray-200 text-gray-700 rounded-lg">
+            Edit
+           </button>
+      </div>
+      <ul class="space-y-2">
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-1">
+          <span>Learn Javascript and make progress on GitHub</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-1">
+          <span>Go to GYM and Do not play Chess</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <input type="checkbox" class="mt-1">
+          <span>Do not Watch series and do not watch screen when eating</span>
+        </li>
+        <!-- Add more tasks similarly -->
+      </ul>
+    </div>
+
+    <!-- Right Card -->
+    <div class="bg-white rounded-xl shadow-lg p-6 flex-1">
+      <h2 class="text-xl font-semibold mb-2">Abhishek Chaudhary</h2>
+      <p class="text-gray-600 mb-4">This Week's Progress - week 38</p>
+      <p class="mb-2">Total Task: 56</p>
+      <p class="mb-4">Completed Task: 0</p>
+      <div class="flex gap-7 justify-center">
+       <div class="flex flex-col items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">MON</span>
+  </div>
+
+  <div class="flex flex-col  items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">TUE</span>
+  </div>
+
+  <div class="flex flex-col items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">WED</span>
+  </div>
+
+  <div class="flex flex-col items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">THU</span>
+  </div>
+
+  <div class="flex flex-col items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">FRI</span>
+  </div>
+
+  <div class="flex flex-col items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">SAT</span>
+  </div>
+
+  <div class="flex flex-col items-center">
+    <div class="bg-gray-200 w-11 h-28 rounded"></div>
+    <span class="mt-2 text-sm">SUN</span>
+  </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+</html>

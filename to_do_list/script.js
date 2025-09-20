@@ -1,131 +1,170 @@
-document.getElementById('btn').addEventListener('click', ()=>{
-    console.log("clicked");
-    const mainDiv = document.getElementById('main-div')
-    mainDiv.classList.toggle('hidden')
+// Persisted tasks
+let allTasksArray = JSON.parse(localStorage.getItem("tasks") || "[]");
 
-    const div = document.createElement('div')
+// Save helper
+function saveTasks() {
+  localStorage.setItem("tasks", JSON.stringify(allTasksArray));
+}
 
-    div.className =  "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
-    div.innerHTML =  `
-        <div class="bg-white p-6 rounded-lg shadow-lg w-[40%] mx-auto">
-          <h2 class="text-xl font-bold mb-4 text-center">Tasks Lists</h2>
-          <ul id="new-lists"  class="space-y-2 text-left">
-             
-          </ul>
-          <div class="flex justify-between text-center mt-4">
-            <button id="closeDiv" class="px-4 py-2 bg-red-500  hover:bg-gray-300 text-white rounded">Submit</button>
-            <button id="addTask" class="px-4 py-2 bg-red-500 hover:bg-gray-300 text-white rounded">Add Task</button>
-          </div>
-        </div>            
-    
-                  `
-               
+// Render main page tasks
+function renderMainTasks() {
+  const leftDiv = document.getElementById('left-div');
+  leftDiv.innerHTML = "";
+  const taskList = document.createElement('ul');
+  taskList.className = 'space-y-3';
 
+  allTasksArray.forEach(task => {
+    const taskItem = document.createElement('li');
+    taskItem.className = 'flex items-start gap-2 hover:bg-gray-100';
 
-    document.body.appendChild(div);
-    const addTasksBtn = document.getElementById('addTask')
-    //let numberOfLists = document.getElementById('new-lists').children.length // ==> it freezes the value 
-    let count = 1;
+    const checkbox = document.createElement('input');
+    checkbox.type = 'checkbox';
+    checkbox.className = 'mt-1';
+    checkbox.checked = !!task.done;
 
-    addTasksBtn.addEventListener('click', ()=>{
-        console.log('clicked on the button of add tasks');
-      
-        const Tasklists = document.getElementById('new-lists')
-        const lists = document.createElement('li')
-        lists.className = "flex items-center  gap-2 justify-between"
-        lists.innerHTML = 
-        `
-        <div class="flex items-center gap-2 flex-1">
-        <span class="w-6 text-center font-bold task-number">  </span>
-        <input type="text" placeholder="Enter your task" class="flex-1 border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
-        </div>
-        <button id="delete-btn"  class="px-2 py-1 bg-gray-500 hover:bg-gray-300 text-white rounded">Delete</button>
-        `;
-        console.log(lists);
-        Tasklists.appendChild(lists)
+    const taskText = document.createElement('span');
+    taskText.textContent = task.text;
 
-        // let numberOfLists = Tasklists.children.length // it count every time when DOM loads click happens
-        // console.log(numberOfLists);
-
-        function updateAddButtonState(){
-            let numberOfLists = Tasklists.children.length
-            const tasks = Tasklists.querySelectorAll("li");
-
-            tasks.forEach((li, index) => {
-                const numberSpan = li.querySelector(".task-number");
-                 if (numberSpan) numberSpan.textContent = index + 1;
-            });
-            if(numberOfLists>=10){
-            addTasksBtn.disabled = true;
-            addTasksBtn.classList.add("bg-gray-400", "cursor-not-allowed");
-            addTasksBtn.classList.remove("bg-red-500");
-            }
-            else{
-            
-            addTasksBtn.disabled = false;
-            addTasksBtn.classList.remove("bg-gray-400", "cursor-not-allowed");
-            addTasksBtn.classList.add("bg-red-500");
-            }
-        }
-        
-        count++;
-
-        lists.querySelector('#delete-btn').addEventListener('click', ()=>{
-            lists.remove()
-            console.log("delete button clicked");
-            
-            updateAddButtonState();
-            count--
-           
-        })
-        //console.log(numberOfLists);
-        
-        updateAddButtonState();
-
-    } )   
-
-    
-
-    document.getElementById('closeDiv').addEventListener('click', ()=>{
-        // div.remove()
-        // mainDiv.classList.toggle('hidden')
-
-        const Tasklists = document.getElementById('new-lists')
-        const allTasks= Tasklists.querySelectorAll('li input[type="text"]')
-
-        const leftDiv = document.getElementById('left-div')
-        leftDiv.innerHTML ="";
-
-        allTasks.forEach((taskInput, index) => {
-        if (taskInput.value.trim() !== "") {
-            // Create a new element for left div
-            const taskItem = document.createElement('li');
-        taskItem.className = 'flex items-start gap-2 hover:bg-gray-100';
-
-        // Create checkbox
-        const checkbox = document.createElement('input');
-        checkbox.type = 'checkbox';
-        checkbox.className = 'mt-1';
-
-        // Create span for task text
-        const taskText = document.createElement('span');
-        taskText.textContent = taskInput.value;
-
-        // Append checkbox and span to LI
-        taskItem.appendChild(checkbox);
-        taskItem.appendChild(taskText);
-
-        // Append LI to UL
-       
-            leftDiv.appendChild(taskItem);
-        }
+    checkbox.addEventListener('change', () => {
+      task.done = checkbox.checked;
+      saveTasks();
     });
 
-    div.remove()
-        mainDiv.classList.toggle('hidden')
+    taskItem.appendChild(checkbox);
+    taskItem.appendChild(taskText);
+    taskList.appendChild(taskItem);
+  });
 
-    })
+  leftDiv.appendChild(taskList);
+}
 
-})
+// Open modal / edit UI
+document.getElementById('btn').addEventListener('click', () => {
+  const mainDiv = document.getElementById('main-div');
+  mainDiv.classList.toggle('hidden');
+
+  const div = document.createElement('div');
+  div.className = "fixed inset-0 flex items-center justify-center bg-black bg-opacity-50";
+  div.innerHTML = `
+    <div class="bg-white p-6 rounded-lg shadow-lg w-[40%] mx-auto">
+      <h2 class="text-xl font-bold mb-4 text-center">Repeating Task List</h2>
+      <ul id="new-lists" class="space-y-2 text-left"></ul>
+      <div class="flex justify-between text-center mt-4">
+        <button id="closeDiv" class="px-4 py-2 bg-red-500 hover:bg-gray-300 text-white rounded">Submit</button>
+        <button id="addTask" class="px-4 py-2 bg-green-500 hover:bg-gray-300 text-white rounded">+ Add Task</button>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(div);
+
+  // Query inside modal only
+  const Tasklists = div.querySelector('#new-lists');
+  const addTasksBtn = div.querySelector('#addTask');
+  const closeBtn = div.querySelector('#closeDiv');
+
+  // Update allTasksArray from the current modal inputs (important)
+  function updateArrayFromModalInputs() {
+    const inputs = Tasklists.querySelectorAll('li input[type="text"]');
+    // If array is longer than inputs, keep length consistent
+    inputs.forEach((input, idx) => {
+      // Ensure an object exists for this index
+      allTasksArray[idx] = allTasksArray[idx] || { text: "", done: false };
+      allTasksArray[idx].text = input.value;
+    });
+    // If inputs are fewer than array length (shouldn't usually happen),
+    // keep trailing items (they will be removed on submit if empty)
+  }
+
+  // Render the modal content from the array
+  function renderModalTasks() {
+    Tasklists.innerHTML = "";
+    allTasksArray.forEach((task, index) => {
+      const lists = document.createElement('li');
+      lists.className = "flex items-center gap-2 justify-between";
+      lists.innerHTML = `
+        <div class="flex items-center gap-2 flex-1">
+          <span class="w-6 text-center font-bold task-number">${index + 1}</span>
+          <input type="text" value="${task.text.replace(/"/g, '&quot;')}" class="flex-1 border rounded px-2 py-1 focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
+        <button class="px-2 py-1 bg-gray-500 hover:bg-gray-300 text-white rounded delete-btn">🗑</button>
+      `;
+
+      // Delete: compute index at time of click (safer)
+      lists.querySelector('.delete-btn').addEventListener('click', (ev) => {
+        // Always capture current typed values first
+        updateArrayFromModalInputs();
+
+        // find which li is being deleted
+        const li = ev.currentTarget.closest('li');
+        const idx = Array.from(Tasklists.children).indexOf(li);
+        if (idx !== -1) {
+          allTasksArray.splice(idx, 1);
+        }
+        renderModalTasks();
+      });
+
+      Tasklists.appendChild(lists);
+    });
+
+    // disable add button if 10 or more
+    addTasksBtn.disabled = allTasksArray.length >= 10;
+    if (addTasksBtn.disabled) {
+      addTasksBtn.classList.add("bg-gray-400", "cursor-not-allowed");
+      addTasksBtn.classList.remove("bg-green-500");
+    } else {
+      addTasksBtn.classList.remove("bg-gray-400", "cursor-not-allowed");
+      addTasksBtn.classList.add("bg-green-500");
+    }
 
 
+    
+
+  }
+
+  // initial modal render
+  renderModalTasks();
+
+  // Add new task button: update array from current inputs first
+  addTasksBtn.addEventListener('click', () => {
+    updateArrayFromModalInputs();
+    if (allTasksArray.length >= 10) return;
+    allTasksArray.push({ text: "", done: false });
+    renderModalTasks();
+    // focus the new input
+    const lastInput = Tasklists.querySelector('li:last-child input[type="text"]');
+    if (lastInput) lastInput.focus();
+  });
+
+  // Submit: update from inputs, remove empty tasks, save and render main
+  closeBtn.addEventListener('click', () => {
+    updateArrayFromModalInputs();
+    // remove tasks with empty text
+    allTasksArray = allTasksArray.filter(t => t.text && t.text.trim() !== '');
+    saveTasks();
+    renderMainTasks();
+    div.remove();
+    mainDiv.classList.toggle('hidden');
+  });
+});
+
+// initial page render
+renderMainTasks();
+
+function getWeekNumber(date){
+    const FirstDay = new Date(date.getFullYear(), 0, 1)
+    const pastDays = (date-FirstDay)/86400000
+    return Math.ceil((pastDays+FirstDay.getDay())/7)
+}
+
+const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"]
+const today = new Date().getDay()
+const dayName = days[today]
+const weekNumber = getWeekNumber(new Date())
+
+document.querySelector('.day').innerHTML = `${dayName} , <span class="text-sm font-semibold">Week ${weekNumber}</span>`
+
+document.getElementById('Week-progress').innerText = `This Week's Progress - week ${weekNumber} `
+
+document.getElementById('remainingTasks').innerText = `Total Task: ${7*allTasksArray.length}`
+
+console.log(allTasksArray[0].done);

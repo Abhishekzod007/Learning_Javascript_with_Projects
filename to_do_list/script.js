@@ -25,9 +25,17 @@ function renderMainTasks() {
     const taskText = document.createElement('span');
     taskText.textContent = task.text;
 
+    if (task.done) taskText.classList.add('line-through', 'text-gray-500');
+
     checkbox.addEventListener('change', () => {
       task.done = checkbox.checked;
+      if (task.done) {
+        taskText.classList.add('line-through', 'text-gray-500');
+      } else {
+        taskText.classList.remove('line-through', 'text-gray-500');
+      }
       saveTasks();
+      updateProgress();
     });
 
     taskItem.appendChild(checkbox);
@@ -35,7 +43,9 @@ function renderMainTasks() {
     taskList.appendChild(taskItem);
   });
 
+// may be we need to perform remiang operations in this function
   leftDiv.appendChild(taskList);
+  updateProgress()
 }
 
 // Open modal / edit UI
@@ -150,6 +160,30 @@ document.getElementById('btn').addEventListener('click', () => {
 // initial page render
 renderMainTasks();
 
+function updateProgress() {
+  const tasksPerDay = allTasksArray.length;
+  const total = 7 * tasksPerDay;
+  const completed = allTasksArray.filter(t => t.done).length;
+
+  document.getElementById('remainingTasks').innerText = `Total Task: ${total}`;
+  document.getElementById('completedTasks').innerText = `Completed Task: ${completed}`;
+
+  // current day (0 = Sunday)
+  const today = new Date().getDay();
+
+  // Reset all fills
+  // for (let i = 0; i < 7; i++) {
+  //   document.getElementById(`fill-${i}`).style.height = "0%";
+  // }
+
+  // Fill today's bar
+  if (tasksPerDay > 0) {
+    const percent = (completed / tasksPerDay) * 100;
+    document.querySelector(`#fill-${today} .fill-layer`).style.height = `${percent}%`;
+    document.querySelector(`#fill-${today} .fill-layer`).style.backgroundColor = 'lightcoral'
+  }
+}
+
 function getWeekNumber(date){
     const FirstDay = new Date(date.getFullYear(), 0, 1)
     const pastDays = (date-FirstDay)/86400000
@@ -167,4 +201,4 @@ document.getElementById('Week-progress').innerText = `This Week's Progress - wee
 
 document.getElementById('remainingTasks').innerText = `Total Task: ${7*allTasksArray.length}`
 
-console.log(allTasksArray[0].done);
+console.log(allTasksArray);

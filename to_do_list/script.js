@@ -6,6 +6,35 @@ function saveTasks() {
   localStorage.setItem("tasks", JSON.stringify(allTasksArray));
 }
 
+
+let weeklyCompleted = parseInt(localStorage.getItem("weeklyCompleted") || "0");
+
+// Track last day
+let lastDay = parseInt(localStorage.getItem("lastDay") || new Date().getDay());
+
+// Check if a new day started
+function handleNewDay() {
+  const today = new Date().getDay();
+  if (today !== lastDay) {
+    // Count completed tasks before reset
+    const completedYesterday = allTasksArray.filter(t => t.done).length;
+    weeklyCompleted += completedYesterday;
+
+    // Save cumulative completed
+    localStorage.setItem("weeklyCompleted", weeklyCompleted);
+
+    // Reset all tasks
+    allTasksArray.forEach(t => t.done = false);
+    saveTasks();
+
+    // Update lastDay
+    lastDay = today;
+    localStorage.setItem("lastDay", lastDay);
+  }
+}
+
+// Call on load
+handleNewDay();
 // Render main page tasks
 function renderMainTasks() {
   const leftDiv = document.getElementById('left-div');
@@ -160,10 +189,13 @@ document.getElementById('btn').addEventListener('click', () => {
 // initial page render
 renderMainTasks();
 
+
+
 function updateProgress() {
   const tasksPerDay = allTasksArray.length;
   const total = 7 * tasksPerDay;
-  const completed = allTasksArray.filter(t => t.done).length;
+  const completedToday = allTasksArray.filter(t => t.done).length;
+  const completed = weeklyCompleted + completedToday;
 
   document.getElementById('remainingTasks').innerText = `Total Task: ${total}`;
   document.getElementById('completedTasks').innerText = `Completed Task: ${completed}`;
@@ -178,9 +210,15 @@ function updateProgress() {
 
   // Fill today's bar
   if (tasksPerDay > 0) {
-    const percent = (completed / tasksPerDay) * 100;
-    document.querySelector(`#fill-${today} .fill-layer`).style.height = `${percent}%`;
-    document.querySelector(`#fill-${today} .fill-layer`).style.backgroundColor = 'lightcoral'
+    const percent = (completedToday / tasksPerDay) * 100;
+    document.querySelector(`#fill-${today} .progress-fill`).style.height = `${percent}%`;
+    document.querySelector(`#fill-${today} .progress-fill`).style.backgroundColor = 'lightcoral'
+    // console.log(`${completedToday} / ${tasksPerDay} tasks completed`);
+     
+    // const tooltip = document.querySelector(`.tooltip`);
+    // if (tooltip) {
+    //   tooltip.innerHTML = `${completedToday} / ${tasksPerDay} tasks completed`;
+    // }
   }
 }
 

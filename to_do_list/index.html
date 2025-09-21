@@ -31,6 +31,11 @@
       0%, 100% { background-size: 200% 200%; }
       50% { background-size: 220% 220%; }
     }
+
+    .progress-fill {
+     transition: height 0.5s ease-in-out, background-color 0.3s ease;
+    }
+
   </style>
 </head>
 <body class="moving-bg min-h-screen flex items-center justify-center p-6">
@@ -60,40 +65,55 @@
       <p id="remainingTasks" class="mb-2"></p>
       <p id="completedTasks" class="mb-4"></p>
       <div class="flex gap-7 justify-center">
-        <div id="fill-0" class="flex flex-col items-center">
-          <div  class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-1" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">MON</span>
         </div>
     
-        <div id="fill-1" class="flex flex-col  items-center">
-          <div  class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-2" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">TUE</span>
         </div>
     
-        <div id="fill-2" class="flex flex-col items-center">
-          <div  class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-3" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">WED</span>
         </div>
     
-        <div id="fill-3" class="flex flex-col items-center">
-          <div  class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-4" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">THU</span>
         </div>
     
-        <div id="fill-4" class="flex flex-col items-center">
-          <div  class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-5" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">FRI</span>
         </div>
     
-        <div  id="fill-5" class="flex flex-col items-center">
-          <div  class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-6" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">SAT</span>
         </div>
     
-        <div id="fill-6"  class="flex flex-col items-center">
-          <div class="fill-layer bg-gray-200 w-11 h-28 rounded"></div>
+        <div id="fill-0" class="flex flex-col items-center">
+          <div class="relative w-11 h-28 rounded bg-gray-200 overflow-hidden">
+            <div class="progress-fill absolute bottom-0 left-0 w-full bg-lightcoral" style="height:0%"></div>
+          </div>
           <span class="mt-2 text-sm">SUN</span>
         </div>
+
       </div>
     </div>
     

@@ -188,6 +188,37 @@ document.getElementById('btn').addEventListener('click', () => {
 
 // initial page render
 renderMainTasks();
+function attachTooltipListeners() {
+  for (let d = 0; d < 7; d++) {
+    const bar = document.querySelector(`#fill-${d}`);
+    if (!bar) continue;
+
+    bar.addEventListener("mouseenter", () => showTooltip(bar, d));
+    bar.addEventListener("mouseleave", () => hideTooltip(bar));
+  }
+}
+
+function showTooltip(bar, dayIndex) {
+  const tasksPerDay = allTasksArray.length;
+  const today = new Date().getDay();
+  const completedDay = (dayIndex === today) ? allTasksArray.filter(t => t.done).length : 0;
+
+  const tooltip = document.createElement("div");
+  tooltip.className = "tooltip absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-100 z-50";
+  tooltip.innerText = `${completedDay} / ${tasksPerDay} tasks completed`;
+  tooltip.style.transition = "opacity 0.3s ease";
+
+  bar.appendChild(tooltip);
+}
+
+function hideTooltip(bar) {
+  const tooltip = bar.querySelector(".tooltip");
+  if (tooltip) tooltip.remove();
+}
+
+// Run once after the bars exist
+attachTooltipListeners();
+
 
 
 
@@ -221,6 +252,60 @@ function updateProgress() {
     // }
   }
 }
+
+// function attachTooltipListeners() {
+//   for (let d = 0; d < 7; d++) {
+//     const bar = document.querySelector(`#fill-${d}`);
+//     if (!bar) continue;
+
+//     bar.addEventListener("mouseenter", () => showTooltip(bar, d));
+//     bar.addEventListener("mouseleave", () => hideTooltip(bar));
+//   }
+// }
+
+// function hideTooltip(bar) {
+//   const tooltip = bar.querySelector(".tooltip");
+//   if (tooltip) tooltip.remove();
+// }
+
+
+// // --- Tooltip helpers ---
+// function showTooltip(bar, dayIndex) {
+//   const tasksPerDay = allTasksArray.length;
+//   const today = new Date().getDay();
+ 
+
+
+  
+
+//   // if it's today, show actual completed count, else show 0
+//   const completedDay = (dayIndex === today)
+//     ? allTasksArray.filter(t => t.done).length
+//     : 0;
+
+//   const tooltip = document.createElement("div");
+//   tooltip.className =
+//     "tooltip absolute -top-8 left-1/2 -translate-x-1/2 bg-black text-white text-xs rounded px-2 py-1 opacity-100 z-50";
+//   tooltip.innerText = `${completedDay} / ${tasksPerDay} tasks completed`;
+
+//   bar.appendChild(tooltip);
+// }
+
+// function hideTooltip(bar) {
+//   const tooltip = bar.querySelector(".tooltip");
+//   if (tooltip) tooltip.remove();
+// }
+
+// function attachTooltipListeners() {
+//   for (let d = 0; d < 7; d++) {
+//     const bar = document.querySelector(`#fill-${d}`);
+//     if (!bar) continue;
+
+//     bar.addEventListener("mouseenter", () => showTooltip(bar, d));
+//     bar.addEventListener("mouseleave", () => hideTooltip(bar));
+//   }
+// }
+
 
 function getWeekNumber(date){
     const FirstDay = new Date(date.getFullYear(), 0, 1)
